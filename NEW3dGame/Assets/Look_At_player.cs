@@ -54,7 +54,7 @@ public class Look_At_player : MonoBehaviour
     void Update()
     {
 
-        Debug.Log(cam.linearVelocity);
+     
         SetDistance();
         
         Colliderdetection();
