@@ -5,23 +5,25 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+
+
 public class Player_Movent : MonoBehaviour
 {
     //Old pos Vector3(0,27,-60)
     //New Pos 
 
     float add;
-
+    [SerializeField] private float smooth;
     [SerializeField] private Jumping jump;
+   
 
-    [Header("UnFixed Variables For PLayer")]
-    [SerializeField] private Vector3 OldPos;
-    [SerializeField] private Vector3 NewPos;
+ 
 
     [Header("Input For Charecter")]
     [SerializeField] private InputAction Controller;
-    private Vector2 movement;
 
+    private Vector2 movement;
+    [SerializeField] private float dis;
     [Header("Movement For Charceter")]
     //Rigidbodies/transfroms
     [SerializeField] private Rigidbody PlayerRigid;
@@ -36,22 +38,27 @@ public class Player_Movent : MonoBehaviour
     [SerializeField] private float rospeed;
     [SerializeField] Animator Animator;
 
-    [SerializeField] private float Sprint;
+    
     [SerializeField] private float temp;
     [SerializeField] private float AirMult;
-
+    [SerializeField] private float Sprint;
+    public float tempo;
     //Animation bools.
-
-    bool walking;
+    public float y;
+    
    public  bool flip = true;
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        tempo = Speed;
+       
     }
     private void Update()
     {
-
+        
+        movement = Controller.ReadValue<Vector2>();
+   
         Playeranimation();
         GoFast();
         flop();
@@ -59,27 +66,32 @@ public class Player_Movent : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        movement = Controller.ReadValue<Vector2>();
-
+        
+        //If Shiftlock
         if (flip)
         {
+            //Walk With the normal Rotations
             Walking();
+            //Move with the normal movement
             Move();
         }
         else
         {
+            //Actiavte shiftlock and its features
             ShiftLock();
+            //Move The correct way using shift Lock
             MoveShift();
         }
 
     }
 
 
-
+   
     private void Walking()
     {
-        Camera.main.transform.localPosition = new Vector3(0, 27, -60);
-
+       
+       
+        
         //If A and S is pressed (Backward direction)
         if (Keyboard.current.aKey.isPressed && Keyboard.current.sKey.isPressed)
         {
@@ -184,7 +196,7 @@ public class Player_Movent : MonoBehaviour
     {
         //The player angels is equal to the pivot angels Y value and the regular x and z values.
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, pivot.eulerAngles.y, transform.eulerAngles.z);
-        Camera.main.transform.localPosition = new Vector3(20, 19, -41.5f);
+        
     }
 
 
@@ -198,17 +210,6 @@ public class Player_Movent : MonoBehaviour
         }
 
     }
-
-    private void OnEnable()
-    {
-        Controller.Enable();
-    }
-
-    private void OnDisable()
-    {
-        Controller.Disable();
-    }
-
     private void Move()
     {
         if (movement.x != 0 && jump.Grounded || movement.y != 0 && jump.Grounded)
@@ -229,7 +230,7 @@ public class Player_Movent : MonoBehaviour
         //If On the ground and moving
         if (movement.x != 0 && jump.Grounded || movement.y != 0 && jump.Grounded)
         {
-            Debug.Log(movement);
+            
             //Add a force times the W A S D values.
             PlayerRigid.AddRelativeForce(new Vector3(movement.x * Speed * temp, 0,  movement.y * Speed * temp));
         }
@@ -241,4 +242,36 @@ public class Player_Movent : MonoBehaviour
             PlayerRigid.linearVelocity = PlayerRigid.linearVelocity - tempo;
         }
     }
+
+    public void SlideSpeed(ref bool done, float duration, float temp)
+    {
+
+        
+
+        
+        Speed -= tempo / duration;
+        if (Speed <= 0 || Keyboard.current.spaceKey.isPressed || !Keyboard.current.leftCtrlKey.isPressed)
+        {
+            Speed = tempo;
+            done = false;
+        
+        }
+        
+        
+        
+        
+    }
+    private void OnEnable()
+    {
+       
+        Controller.Enable();
+    }
+
+    private void OnDisable()
+    {
+       
+        Controller.Disable();
+    }
+
+  
 }

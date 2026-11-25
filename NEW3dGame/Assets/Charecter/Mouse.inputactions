@@ -1,0 +1,36 @@
+{
+    "version": 1,
+    "name": "Mouse",
+    "maps": [
+        {
+            "name": "Mouse",
+            "id": "f2ea6523-3a04-4a26-a955-69b56c2436de",
+            "actions": [
+                {
+                    "name": "Mouse",
+                    "type": "PassThrough",
+                    "id": "74650369-1cc9-4fcd-a393-4b76e252a0c2",
+                    "expectedControlType": "Delta",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ea6dd420-a2de-421a-ab9a-7dc02914737e",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

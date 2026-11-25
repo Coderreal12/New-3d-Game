@@ -67,8 +67,8 @@ Debug.Log("Bool number " + i + " " + Touching[i]);
     
         
 
-        
     }
+        
     private void Check_Jump()
     {
         //If grounded then set the jumprforce (tempp) to the nomral jump force.

@@ -8,16 +8,28 @@
             "actions": [
                 {
                     "name": "New action",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "a7a8cac3-7415-4618-9ce3-f624f2acb1b7",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true,
+                    "initialStateCheck": false,
                     "priority": 0
                 }
             ],
-            "bindings": []
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cda21564-5624-434d-b827-aab26ed5cc32",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
