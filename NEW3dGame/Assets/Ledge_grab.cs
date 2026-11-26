@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 public class Ledge_grab : MonoBehaviour
 {
+    [SerializeField] Slide sliding;
     [SerializeField] Jumping PlayerScript;
     [SerializeField] private Jumping jump;
 
@@ -79,7 +80,7 @@ Debug.Log("Bool number " + i + " " + Touching[i]);
 
 
         //If Square cast is not null, and the box cast is null, and space key was pressed, then jump; 
-            if (Touching[0] && !Touching[1] && Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (Touching[0] && !Touching[1] && Keyboard.current.spaceKey.wasPressedThisFrame && !sliding.done)
         {
           
             PlayerRb.linearVelocity = new Vector3(PlayerRb.linearVelocity.x, temp, PlayerRb.linearVelocity.z);

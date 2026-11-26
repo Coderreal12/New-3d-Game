@@ -10,8 +10,8 @@ public class Slide : MonoBehaviour
 
     [SerializeField] private Rigidbody PlayerRB;
 
-    [SerializeField] private Collider WalkingCol;
-    [SerializeField] private Collider SlidingCol;
+    [SerializeField] private CapsuleCollider WalkingCol;
+    [SerializeField] private CapsuleCollider SlidingCol;
     [Header("Sliding Floats")]
 [SerializeField] private float duration;
     [SerializeField] private float MinSlideSpeed;
@@ -19,14 +19,17 @@ public class Slide : MonoBehaviour
     [Header("Sliding Animations")]
     [SerializeField] private Jumping PlayerJMP;
     [SerializeField] private Player_Movent PlayerMVT;
+    [SerializeField] private Transform GroundedLoc;
 
-    
-    
-    private bool done = false;
 
+     [SerializeField]  private float Toloc;
+    float RegHeight = 22;
+    public bool done = false;
+    private Vector3 FirstLoc;
+     [SerializeField] private float ToUp;
     private void Start()
     {
-        
+        FirstLoc = GroundedLoc.localPosition;
     }
     void Update()
     {
@@ -44,19 +47,31 @@ public class Slide : MonoBehaviour
     {
         if(done)
         {
- PlayerMVT.SlideSpeed(ref done, duration, PlayerMVT.tempo);   
+ PlayerMVT.SlideSpeed(ref done, duration, PlayerMVT.tempo);
+          
+           Toloc-= .5f;
         }
         else
         {
+           
+            Toloc += .5f;
             Animation.SetBool("Sliding", false);
         }
-     
+        
+        Toloc = Mathf.Clamp(Toloc, -5, 0);
+ 
     }
 
     private void SetColliders()
     {
-        WalkingCol.isTrigger = done;
-        SlidingCol.isTrigger = !done;
+
+        WalkingCol.height = RegHeight + Toloc;
+        GroundedLoc.localPosition=  FirstLoc + Vector3.down *  ToUp;
+
+
+        
+        
+       SlidingCol.isTrigger = !done;
     }
 
 

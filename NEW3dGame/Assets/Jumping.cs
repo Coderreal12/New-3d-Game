@@ -33,26 +33,29 @@ public class Jumping : MonoBehaviour
         }
         //For animation
         jump = Grounded;
-      
+       SetGrounded();
     }
 
     private void FixedUpdate()
     {
-        //Defualt: Linear Damping is 10
-        Player.linearDamping = 10f;
+     
+
+    }
+
+    private void SetGrounded()
+    {
+Player.linearDamping = 10f;
 
         //If Inair then set the lineardamping to 0
         if (!Physics.CheckSphere(SphereLoc.position, Radius, LayerMask.GetMask(Ground)))
         {
             Player.linearDamping = 0f;
         }
-
     }
-
     private void Jump()
     {
         //Add a force up Duhh.
-        Player.AddRelativeForce(0, JumpForce, 0);
+        Player.AddForce(0, JumpForce, 0);
      
         
     
@@ -64,7 +67,7 @@ public class Jumping : MonoBehaviour
         Gizmos.color = Color.red;
 
         Gizmos.DrawSphere(SphereLoc.position, Radius);
-        Player.linearDamping = 0f;
+
     }
 
    
