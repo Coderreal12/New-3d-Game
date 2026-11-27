@@ -9,9 +9,11 @@ using UnityEngine.InputSystem;
 
 public class Player_Movent : MonoBehaviour
 {
+    [SerializeField] private float DivideSpeed;
+    [SerializeField] Grapple grappl;
     //Old pos Vector3(0,27,-60)
     //New Pos 
-
+    private Vector3 FromGrapple;
     float add;
     [SerializeField] private float smooth;
     [SerializeField] private Jumping jump;
@@ -37,7 +39,7 @@ public class Player_Movent : MonoBehaviour
     [SerializeField] private float offfff;
     [SerializeField] private float rospeed;
     [SerializeField] Animator Animator;
-
+    [SerializeField] private float Lin;
     
     [SerializeField] private float temp;
     [SerializeField] private float AirMult;
@@ -210,23 +212,51 @@ public class Player_Movent : MonoBehaviour
         }
 
     }
+
+    private void SetGrappl()
+    {
+
+        if (grappl.Holding)
+        {
+            FromGrapple = PlayerRigid.linearVelocity; 
+        }
+        if (jump.Grounded)
+        {
+            FromGrapple = new Vector3(0,0,0);
+        }
+    }
     private void Move()
     {
+        SetGrappl();
+
         if (movement.x != 0 && jump.Grounded || movement.y != 0 && jump.Grounded)
         {
             PlayerRigid.AddRelativeForce(new Vector3(0, 0, 1 * Speed * temp));
         }
-        //If not add the new speed.
-        else if (movement.x != 0 && !jump.Grounded || movement.y != 0 && !jump.Grounded)
+else if (movement.x != 0 && !jump.Grounded && !grappl.Holding || movement.y != 0 && !jump.Grounded && !grappl.Holding)
         {
+            Debug.Log(" I am sadly moving slowly");
             Vector3 tempo = new Vector3(PlayerRigid.linearVelocity.x, 0, PlayerRigid.linearVelocity.z);
             PlayerRigid.AddRelativeForce(new Vector3(0, 0, 1 * Speed * AirMult * temp));
-            PlayerRigid.linearVelocity = PlayerRigid.linearVelocity - tempo;
+            PlayerRigid.linearVelocity = PlayerRigid.linearVelocity - tempo + new Vector3( FromGrapple.x,0,FromGrapple.z);
+            FromGrapple /= DivideSpeed ;
         }
+
+        else if (movement.x != 0 && !jump.Grounded && grappl.Holding|| movement.y != 0 && !jump.Grounded && grappl.Holding)
+        {
+            Debug.Log("I should not be moving sloly");
+            float speed = Vector3.Magnitude(PlayerRigid.linearVelocity) * 1.3f;
+            PlayerRigid.AddRelativeForce(new Vector3(0, 0, 1 * Speed * AirMult * temp * 0.1f - speed) );
+            
+        }
+        //If not add the new speed.
+        
+
     }
 
     private void MoveShift()
     {
+        SetGrappl();
         //If On the ground and moving
         if (movement.x != 0 && jump.Grounded || movement.y != 0 && jump.Grounded)
         {
@@ -235,12 +265,21 @@ public class Player_Movent : MonoBehaviour
             PlayerRigid.AddRelativeForce(new Vector3(movement.x * Speed * temp, 0,  movement.y * Speed * temp));
         }
         //If not add the new speed.
-        else if (movement.x != 0 && !jump.Grounded || movement.y != 0 && !jump.Grounded)
+        else if (movement.x != 0 && !jump.Grounded && !grappl.Holding || movement.y != 0 && !jump.Grounded && !grappl.Holding)
         {
-            Vector3 tempo = new Vector3(PlayerRigid.linearVelocity.x, 0, PlayerRigid.linearVelocity.z);
-            PlayerRigid.AddRelativeForce(new Vector3(movement.x * Speed * AirMult * temp, 0, movement.y * Speed * AirMult * temp));
-            PlayerRigid.linearVelocity = PlayerRigid.linearVelocity - tempo;
+           Vector3 tempo = new Vector3(PlayerRigid.linearVelocity.x, 0, PlayerRigid.linearVelocity.z);
+            PlayerRigid.AddRelativeForce(new Vector3(movement.x * Speed * AirMult * temp, 0, movement.y * Speed * AirMult * temp ));
+            PlayerRigid.linearVelocity = PlayerRigid.linearVelocity - tempo + new Vector3(FromGrapple.x, 0, FromGrapple.z);
+          //  PlayerRigid.linearVelocity = new Vector3(Mathf.Clamp(PlayerRigid.linearVelocity.x, -1 * Lin, Lin), PlayerRigid.linearVelocity.y, Mathf.Clamp(PlayerRigid.linearVelocity.z, -1 * Lin, Lin));
         }
+        else if (movement.x != 0 && !jump.Grounded && grappl.Holding || movement.y != 0 && !jump.Grounded && grappl.Holding)
+        {
+            float speed = Vector3.Magnitude(PlayerRigid.linearVelocity) * 1.3f;
+            PlayerRigid.AddRelativeForce(new Vector3(0, 0, 1 * Speed * AirMult * temp * 0.1f - speed) );
+            
+        }
+
+
     }
 
     public void SlideSpeed(ref bool done, float duration, float temp)
